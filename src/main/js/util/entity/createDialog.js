@@ -3,30 +3,17 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-import ReactModal from "react-modal";
+import Modal from "../modal";
 import Selector from "../select";
 
 export default class CreateDialog extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            showModal: false
-        };
+
         this.handleSubmit = this.handleSubmit.bind(this);
         this.getOptionsFromArray = this.getOptionsFromArray.bind(this);
-        this.capitalizeFirstLetter = this.capitalizeFirstLetter.bind(this);
-
-        this.handleOpenModal = this.handleOpenModal.bind(this);
-        this.handleCloseModal = this.handleCloseModal.bind(this);
-    }
-
-    handleOpenModal() {
-        this.setState({showModal: true});
-    }
-
-    handleCloseModal() {
-        this.setState({showModal: false});
+        CreateDialog.capitalizeFirstLetter = CreateDialog.capitalizeFirstLetter.bind(this);
     }
 
     render() {
@@ -51,27 +38,21 @@ export default class CreateDialog extends React.Component {
 
             return (<div key={attribute}>
                 {label}
-                <input type="text" placeholder={attribute} ref={attribute} className="field"/>
+                <input type="text" ref={attribute} className="field"/>
             </div>);
         });
 
+        var content = <form>
+            {inputs}
+            <button onClick={this.handleSubmit}>Create</button>
+        </form>;
         return (
-            <div>
-                <a href="#createDialog" className="material-icons" title="Add new" onClick={this.handleOpenModal}>person_add</a>
-
-                <ReactModal isOpen={this.state.showModal}
-                            onRequestClose={this.handleCloseModal}
-                            contentLabel="Create">
-                    <div>
-                        <button onClick={this.handleCloseModal} title="Close" className="close">X</button>
-
-                        <form>
-                            {inputs}
-                            <button onClick={this.handleSubmit}>Create</button>
-                        </form>
-                    </div>
-                </ReactModal>
-            </div>
+            <Modal ref={(modal) => {
+                this.modal = modal;
+            }}
+                   content={content}
+                   materialIconName="person_add"
+                   buttonTitle="Add new"/>
         )
     }
 
@@ -87,21 +68,19 @@ export default class CreateDialog extends React.Component {
         this.props.attributes.forEach(attribute => {
             ReactDOM.findDOMNode(this.refs[attribute]).value = '';
         });
-
-        // Navigate away from the dialog to hide it.
-        window.location = "#";
+        this.modal.handleCloseModal();
     }
 
     getOptionsFromArray(arr) {
         return arr.map(value => {
             return {
                 value: value,
-                label: this.capitalizeFirstLetter(value)
+                label: CreateDialog.capitalizeFirstLetter(value)
             }
         })
     }
 
-    capitalizeFirstLetter(string) {
+    static capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
     }
 
