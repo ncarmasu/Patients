@@ -5,15 +5,19 @@ const ReactDOM = require('react-dom');
 
 import Modal from "../modal";
 import Selector from "../select";
+import Str from "../str";
 
-export default class CreateDialog extends React.Component {
+/**
+ * Modal dialog used to create or update a new entity. It contains the launch button and the actual dialog.
+ * Based on whether the entity property exists it renders itself in create or update mode.
+ */
+export default class EntityDialog extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.getOptionsFromArray = this.getOptionsFromArray.bind(this);
-        CreateDialog.capitalizeFirstLetter = CreateDialog.capitalizeFirstLetter.bind(this);
     }
 
     render() {
@@ -30,15 +34,17 @@ export default class CreateDialog extends React.Component {
                         < Selector key={attribute}
                                    name={this.props.schemaProperties[attribute].title}
                                    options={options}
+                                   defaultValue={this.props.entity ? this.props.entity[attribute] : ""}
                                    className="modalInputField"
                         />
                     </div>
                 );
             }
 
-            return (<div key={attribute}>
+            return (<div>
                 {label}
-                <input type="text" ref={attribute} className="field"/>
+                <input key={attribute} type="text" ref={attribute} className="field"
+                       defaultValue={this.props.entity ? this.props.entity[attribute] : ""}/>
             </div>);
         });
 
@@ -51,8 +57,8 @@ export default class CreateDialog extends React.Component {
                 this.modal = modal;
             }}
                    content={content}
-                   materialIconName="person_add"
-                   buttonTitle="Add new"/>
+                   materialIconName={this.props.entity ? "mode_edit" : "person_add"}
+                   buttonTitle={this.props.entity ? "Update" : "Add"}/>
         )
     }
 
@@ -62,8 +68,12 @@ export default class CreateDialog extends React.Component {
         this.props.attributes.forEach(attribute => {
             newEntity[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
         });
-        this.props.onCreate(newEntity);
-
+        if (this.props.entity) {
+            this.props.onUpdate(this.props.entity, newEntity);
+        }
+        else {
+            this.props.onCreate(newEntity);
+        }
         // clear out the dialog's inputs
         this.props.attributes.forEach(attribute => {
             ReactDOM.findDOMNode(this.refs[attribute]).value = '';
@@ -75,13 +85,8 @@ export default class CreateDialog extends React.Component {
         return arr.map(value => {
             return {
                 value: value,
-                label: CreateDialog.capitalizeFirstLetter(value)
+                label: Str.capitalizeFirstLetter(value)
             }
         })
     }
-
-    static capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-    }
-
 }

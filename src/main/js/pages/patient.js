@@ -8,7 +8,7 @@ const client = require('../util/client');
 const follow = require('../util/follow'); // function to hop multiple links by "rel"
 
 import VisitList from "../visits/visitList";
-import CreateDialog from "../util/entity/createDialog";
+import EntityDialog from "../util/entity/entityDialog";
 
 
 var root = '/api';
@@ -34,7 +34,7 @@ export default class visit extends React.Component {
     render() {
         return (
             <div>
-                <CreateDialog attributes={this.state.attributes}
+                <EntityDialog attributes={this.state.attributes}
                               schemaProperties={this.state.schema.properties}
                               onCreate={this.onCreate}/>
                 <VisitList visits={this.state.visits}

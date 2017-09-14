@@ -50,17 +50,17 @@ export default class Modal extends React.Component {
 
     render() {
         return (
-            <div>
+            <span>
                 <i className="material-icons" title={this.props.buttonTitle}
                    onClick={this.handleOpenModal}>{this.props.materialIconName}</i>
                 <ReactModal isOpen={this.state.showModal}
                             onRequestClose={this.handleCloseModal}
-                            style={style}>
+                            className={{base: 'modalContent'}}>
                     <div>
                         <button onClick={this.handleCloseModal} title="Close" className="close">X</button>
                         {this.props.content}
                     </div>
                 </ReactModal>
-            </div>);
+            </span>);
     }
 }

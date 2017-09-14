@@ -9,7 +9,7 @@ const follow = require('../util/follow'); // function to hop multiple links by "
 
 
 import PatientList from "../patients/patientList";
-import CreateDialog from "../util/entity/createDialog";
+import EntityDialog from "../util/entity/entityDialog";
 
 var root = '/api';
 
@@ -48,7 +48,7 @@ export default class Home extends React.Component {
     render() {
         return (
             <div>
-                <CreateDialog attributes={this.state.attributes}
+                <EntityDialog attributes={this.state.attributes}
                               onCreate={this.onCreate}
                               schemaProperties={this.state.schema.properties}/>
                 <PatientList patients={this.state.patients}
@@ -62,6 +62,7 @@ export default class Home extends React.Component {
                              onUpdate={this.onUpdate}
                              updatePageSize={this.updatePageSize}
                              searchPatient={this.searchPatient}
+                             schemaProperties={this.state.schema.properties}
                 />
             </div>
         )

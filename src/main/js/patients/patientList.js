@@ -17,6 +17,7 @@ export default class PatientList extends AbstractList {
         var patients = this.props.patients.map(patient =>
             <Patient key={patient.entity._links.self.href} patient={patient}
                      attributes={this.props.attributes}
+                     schemaProperties={this.props.schemaProperties}
                      onUpdate={this.props.onUpdate}
                      onDelete={this.props.onDelete}/>
         );

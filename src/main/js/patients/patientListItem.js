@@ -2,7 +2,7 @@
 
 const React = require('react');
 
-import UpdateDialog from "../util/entity/updateDialog";
+import EntityDialog from "../util/entity/entityDialog";
 import EntityLink from "../util/entity/entityLink";
 
 export default class Patient extends React.Component {
@@ -22,10 +22,11 @@ export default class Patient extends React.Component {
                 <td>
                     <EntityLink entity={this.props.patient.entity}
                                 displayValue={this.props.patient.entity.firstName + ' ' + this.props.patient.entity.lastName}/>
-                    <UpdateDialog
+                    <span className="editIcon"> <EntityDialog
                         entity={this.props.patient.entity}
                         attributes={this.props.attributes}
-                        onUpdate={this.props.onUpdate}/>
+                        onUpdate={this.props.onUpdate}
+                        schemaProperties={this.props.schemaProperties}/></span>
                 </td>
                 <td>{this.props.patient.entity.description}</td>
                 <td>
